@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificate Verification — Genoid Tech</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <!-- QR Code generator library (for future enhancements) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!--  NAVBAR                                    -->
+  <!-- ══════════════════════════════════════════ -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <img id="nav-logo" src="images/logo.png" alt="Genoid Tech" class="nav-logo" />
+        <span class="nav-name">Genoid Tech</span>
+      </div>
+      <a href="admin.html" class="nav-admin-link">Admin Panel →</a>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!--  HERO / VERIFICATION FORM                 -->
+  <!-- ══════════════════════════════════════════ -->
+  <section class="hero" id="verify-section">
+    <div class="hero-bg-rings">
+      <div class="ring ring1"></div>
+      <div class="ring ring2"></div>
+      <div class="ring ring3"></div>
+    </div>
+
+    <div class="hero-content">
+      <!-- Org Logo -->
+      <div class="org-logo-wrap" id="org-logo-wrap">
+        <img id="hero-logo" src="images/logo.png" alt="Genoid Tech Logo" class="hero-logo" style="width:72px; height:72px; object-fit:contain; border-radius:12px;" />
+        <div id="logo-placeholder" class="logo-placeholder hidden">GT</div>
+      </div>
+
+      <p class="org-label">GENOID TECH</p>
+      <h1 class="hero-title">Certificate Verification Portal</h1>
+      <p class="hero-sub">Enter the Certificate ID printed on your certificate to verify its authenticity.</p>
+
+      <!-- Verification Form -->
+      <div class="verify-card">
+        <div class="verify-card-inner">
+          <label class="input-label" for="certId">Certificate ID</label>
+          <div class="input-row">
+            <div class="input-wrap">
+              <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input
+                type="text"
+                id="certId"
+                class="cert-input"
+                placeholder="e.g. GT2026AI001 or AI-WORKSHOP-001"
+                autocomplete="off"
+                spellcheck="false"
+                maxlength="100"
+              />
+            </div>
+            <button class="verify-btn" id="verifyBtn" onclick="verifyCertificate()">
+              <span class="btn-text">Verify Certificate</span>
+              <span class="btn-loader hidden"></span>
+            </button>
+          </div>
+          <p class="input-hint">The Certificate ID is printed on your certificate. It may contain letters, numbers, hyphens, or underscores.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!--  RESULT SECTION                           -->
+  <!-- ══════════════════════════════════════════ -->
+  <section id="result-section" class="result-section hidden">
+    <div class="result-container">
+
+      <!-- ✅ SUCCESS STATE -->
+      <div id="success-result" class="hidden">
+        <div class="result-card verified-card">
+
+          <!-- Success Badge -->
+          <div class="badge-wrap">
+            <div class="badge-circle success-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+          <h2 class="result-heading success-heading">Certificate Verified Successfully</h2>
+          <p class="verified-tag">✓ This is an authentic certificate issued by Genoid Tech</p>
+
+          <div class="cert-divider"></div>
+
+          <!-- Certificate Info Grid -->
+          <div class="cert-info-grid" id="cert-info-grid">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="cert-divider"></div>
+
+          <!-- Org Section -->
+          <div class="org-section">
+            <div class="org-left">
+              <img id="result-logo" src="" alt="Genoid Tech" class="result-logo hidden" />
+              <div id="result-logo-placeholder" class="result-logo-placeholder">GT</div>
+              <div class="org-name-block">
+                <span class="org-title-text">GENOID TECH</span>
+                <span class="org-subtitle-text">Technology & Training Organization</span>
+              </div>
+            </div>
+            <div class="org-right">
+              <div class="sig-block">
+                <img id="result-signature" src="" alt="Digital Signature" class="result-signature hidden" />
+                <div id="sig-placeholder" class="sig-placeholder">[ Signature ]</div>
+                <p class="sig-name" id="sig-name">—</p>
+                <p class="sig-desig" id="sig-desig">Authorized Signatory</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cert-divider"></div>
+
+          <!-- Timestamp -->
+          <div class="timestamp-row">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="verified-at">Verified on: —</span>
+          </div>
+
+          <button class="verify-another-btn" onclick="resetForm()">Verify Another Certificate</button>
+        </div>
+      </div>
+
+      <!-- ❌ ERROR STATE -->
+      <div id="error-result" class="hidden">
+        <div class="result-card error-card">
+          <div class="badge-wrap">
+            <div class="badge-circle error-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+          </div>
+          <h2 class="result-heading error-heading">Certificate Not Found</h2>
+          <p class="error-message" id="error-message">The entered Certificate ID does not exist in our records. Please check the Certificate ID and try again.</p>
+          <div class="error-tips">
+            <p class="tips-title">Possible reasons:</p>
+            <ul>
+              <li>The Certificate ID was entered incorrectly</li>
+              <li>Extra spaces before or after the ID</li>
+              <li>The certificate has not been issued yet</li>
+              <li>Contact Genoid Tech if the issue persists</li>
+            </ul>
+          </div>
+          <button class="verify-another-btn" onclick="resetForm()">Try Again</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!--  FOOTER                                   -->
+  <!-- ══════════════════════════════════════════ -->
+  <footer class="footer">
+    <p>© 2026 <strong>Genoid Tech</strong> — All Rights Reserved</p>
+    <p class="footer-sub">This verification portal is the official certificate verification system of Genoid Tech.</p>
+  </footer>
+
+  <script src="js/verify.js"></script>
+  <script>
+    // Load org logo on page init
+    window.addEventListener('DOMContentLoaded', loadOrgLogo);
+  </script>
+
+</body>
+</html>
