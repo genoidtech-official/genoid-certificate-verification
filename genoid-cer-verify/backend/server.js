@@ -69,6 +69,15 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
+// ─── Error Handling Middleware ────────────────────────────────
+app.use((err, req, res, next) => {
+  console.error('[Server Error]', err);
+  return res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'An unexpected server error occurred.',
+  });
+});
+
 // ─── MongoDB Connection ───────────────────────────────────────
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/genoid_cert_db';
 

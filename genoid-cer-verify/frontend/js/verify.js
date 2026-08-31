@@ -192,23 +192,24 @@ function escapeHtml(str) {
 // ─── Load org logo into navbar ──────────────────────────────
 async function loadOrgLogo() {
   try {
-    // We fetch settings via a lightweight ping; logo URL is served statically
-    // Try fetching logo from known path — if it errors, keep placeholder
     const logoEl  = document.getElementById('hero-logo');
     const navLogo = document.getElementById('nav-logo');
     const placeholder = document.getElementById('logo-placeholder');
 
-    // Attempt to load logo; if 404, hide silently
-    const testImg = new Image();
-    testImg.onload = () => {
-      logoEl.src = testImg.src;
-      logoEl.classList.remove('hidden');
-      placeholder.classList.add('hidden');
-      navLogo.src = testImg.src;
-      navLogo.classList.remove('hidden');
-    };
-    // We don't know the filename; admin must be logged in to get settings
-    // Logo is auto-shown after upload via admin panel caching or refreshing page
+    const response = await fetch(`${API_BASE}/api/verify/settings`);
+    if (!response.ok) return;
+    const data = await response.json();
+    if (data.success && data.logo) {
+      const testImg = new Image();
+      testImg.onload = () => {
+        logoEl.src = testImg.src;
+        logoEl.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        navLogo.src = testImg.src;
+        navLogo.classList.remove('hidden');
+      };
+      testImg.src = data.logo;
+    }
   } catch (e) { /* Keep placeholder */ }
 }
 

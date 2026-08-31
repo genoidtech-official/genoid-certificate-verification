@@ -9,6 +9,25 @@ const Certificate = require('../models/Certificate');
 const Settings    = require('../models/Settings');
 
 // ─────────────────────────────────────────────────
+// GET /api/verify/settings
+// ─────────────────────────────────────────────────
+router.get('/settings', async (req, res) => {
+  try {
+    const logoSetting = await Settings.findOne({ key: 'logo' });
+    return res.status(200).json({
+      success: true,
+      logo: logoSetting ? `/uploads/logos/${logoSetting.value}` : null,
+    });
+  } catch (err) {
+    console.error('[Public Settings Error]', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error.',
+    });
+  }
+});
+
+// ─────────────────────────────────────────────────
 // POST /api/verify
 // Body: { certificateId: "GT2026AI001" }
 // ─────────────────────────────────────────────────
